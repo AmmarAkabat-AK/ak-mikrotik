@@ -908,7 +908,7 @@ async function loadUM(){
   document.getElementById("um-rstat").innerHTML=`<div class="info-box">⏳ جاري الاتصال بـ User Manager...</div>`;
   document.getElementById("um-c").innerHTML=`<div class="card text-center" style="padding:56px"><div class="spin" style="font-size:32px;display:inline-block">⏳</div><div class="text-muted mt-12">جاري تحميل المستخدمين...</div></div>`;
   try {
-    const res=await fetch("/api/mikrotik/um-users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728})});
+    const res=await fetch("https://ak-mikrotik-api.onrender.com/api/mikrotik/um-users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728})});
     const data=await res.json();
     if(!res.ok){document.getElementById("um-rstat").innerHTML=`<div class="error-box">❌ ${data.error||"فشل الاتصال"}</div>`;umS.loading=false;if(btn){btn.disabled=false;btn.textContent="🔄 تحميل";}document.getElementById("um-c").innerHTML=`<div class="card text-center text-muted" style="padding:56px">فشل تحميل المستخدمين</div>`;return;}
     const users=data.users||[];
@@ -1076,7 +1076,7 @@ async function onSRC(){
   const router=S.routers.find(r=>String(r.id)===String(rid));if(!router)return;
   status.innerHTML=`<div class="info-box mt-8">⏳ جاري تحميل الباقات...</div>`;pkgSel.disabled=true;
   try {
-    const res=await fetch("/api/mikrotik/packages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728})});
+    const res=await fetch("https://ak-mikrotik-api.onrender.com/api/mikrotik/packages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728})});
     const data=await res.json();
     if(!res.ok){status.innerHTML=`<div class="error-box mt-8">❌ ${data.error||"فشل"}</div>`;return;}
     sPkgs=data.packages||[];
@@ -1092,7 +1092,7 @@ async function showSales(){
   const btn=document.getElementById("cs-btn");btn.disabled=true;btn.textContent="⏳ جاري الجلب...";
   document.getElementById("cs-err").innerHTML="";document.getElementById("s-result").innerHTML="";
   try {
-    const res=await fetch("/api/mikrotik/sales-report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728,packageName:document.getElementById("cs-p").value,fromDate:document.getElementById("cs-f").value,toDate:document.getElementById("cs-t").value})});
+    const res=await fetch("https://ak-mikrotik-api.onrender.com/api/mikrotik/sales-report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728,packageName:document.getElementById("cs-p").value,fromDate:document.getElementById("cs-f").value,toDate:document.getElementById("cs-t").value})});
     const data=await res.json();
     if(!res.ok){document.getElementById("cs-err").innerHTML=`<div class="error-box mb-12">❌ ${data.error||"فشل"}</div>`;return;}
     sData=data.rows||[];renderSalesT(router.name);
