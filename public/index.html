@@ -308,8 +308,8 @@ tbody tr:hover td{background:rgba(16,185,129,.03)}
 <script>
 const { createClient } = supabase;
 const sb = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_KEY
+  "https://zvzjxrfjrbgybyqcaxbe.supabase.co",
+  "sb_publishable_G_4krnvJ3eeP_Uv--M75CA_iWmafDf3"
 );
 
 let S = { user:null, page:"dashboard", devices:[], routers:[], users:[], watchers:[] };
@@ -589,7 +589,7 @@ async function runDiscover() {
   document.getElementById("disc-error").innerHTML="";
   document.getElementById("disc-results").innerHTML=`<div class="text-muted text-sm text-center" style="padding:20px"><span class="spin" style="display:inline-block">⏳</span> جاري الكشف...</div>`;
   try {
-    const res=await fetch("${import.meta.env.VITE_API_URL}/api/mikrotik/discover",{method:"POST",headers:{"Content-Type":"application/json"},
+    const res=await fetch("https://ak-mikrotik-api.onrender.com/api/mikrotik/discover",{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({host:r.host,username:r.username,password:r.password,port:r.port||8728,
         filterType:document.getElementById("disc-filter").value,subnet:document.getElementById("disc-subnet").value})});
     const data=await res.json();
@@ -768,7 +768,7 @@ async function pingR(id){
   const btn=document.getElementById(`ping-${id}`); if(btn){btn.disabled=true;btn.textContent="⏳";}
   const statEl=document.getElementById(`rstat-${id}`); if(statEl)statEl.innerHTML=`<span class="text-muted">⏳ فحص...</span>`;
   try {
-    const res=await fetch("${import.meta.env.VITE_API_URL}/api/mikrotik/ping",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:r.host,username:r.username,password:r.password,port:r.port||8728})});
+    const res=await fetch("https://ak-mikrotik-api.onrender.com/api/mikrotik/ping",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:r.host,username:r.username,password:r.password,port:r.port||8728})});
     const data=await res.json(); pCache[id]=data;
     await sb.from("mikrotik_servers").update({status:data.online?"online":"disconnected"}).eq("id",id);
     await lr();
@@ -908,7 +908,7 @@ async function loadUM(){
   document.getElementById("um-rstat").innerHTML=`<div class="info-box">⏳ جاري الاتصال بـ User Manager...</div>`;
   document.getElementById("um-c").innerHTML=`<div class="card text-center" style="padding:56px"><div class="spin" style="font-size:32px;display:inline-block">⏳</div><div class="text-muted mt-12">جاري تحميل المستخدمين...</div></div>`;
   try {
-    const res=await fetch("${import.meta.env.VITE_API_URL}/api/mikrotik/um-users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728})});
+    const res=await fetch("/api/mikrotik/um-users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728})});
     const data=await res.json();
     if(!res.ok){document.getElementById("um-rstat").innerHTML=`<div class="error-box">❌ ${data.error||"فشل الاتصال"}</div>`;umS.loading=false;if(btn){btn.disabled=false;btn.textContent="🔄 تحميل";}document.getElementById("um-c").innerHTML=`<div class="card text-center text-muted" style="padding:56px">فشل تحميل المستخدمين</div>`;return;}
     const users=data.users||[];
@@ -1076,7 +1076,7 @@ async function onSRC(){
   const router=S.routers.find(r=>String(r.id)===String(rid));if(!router)return;
   status.innerHTML=`<div class="info-box mt-8">⏳ جاري تحميل الباقات...</div>`;pkgSel.disabled=true;
   try {
-    const res=await fetch("${import.meta.env.VITE_API_URL}/api/mikrotik/packages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728})});
+    const res=await fetch("/api/mikrotik/packages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728})});
     const data=await res.json();
     if(!res.ok){status.innerHTML=`<div class="error-box mt-8">❌ ${data.error||"فشل"}</div>`;return;}
     sPkgs=data.packages||[];
@@ -1092,7 +1092,7 @@ async function showSales(){
   const btn=document.getElementById("cs-btn");btn.disabled=true;btn.textContent="⏳ جاري الجلب...";
   document.getElementById("cs-err").innerHTML="";document.getElementById("s-result").innerHTML="";
   try {
-    const res=await fetch("${import.meta.env.VITE_API_URL}/api/mikrotik/sales-report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728,packageName:document.getElementById("cs-p").value,fromDate:document.getElementById("cs-f").value,toDate:document.getElementById("cs-t").value})});
+    const res=await fetch("/api/mikrotik/sales-report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({host:router.host,username:router.username,password:router.password,port:router.port||8728,packageName:document.getElementById("cs-p").value,fromDate:document.getElementById("cs-f").value,toDate:document.getElementById("cs-t").value})});
     const data=await res.json();
     if(!res.ok){document.getElementById("cs-err").innerHTML=`<div class="error-box mb-12">❌ ${data.error||"فشل"}</div>`;return;}
     sData=data.rows||[];renderSalesT(router.name);
